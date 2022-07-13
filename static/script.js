@@ -20,7 +20,7 @@ function CheckVerification(){
         for (let i = 0; i < data.length; i++){
             if (data[i].tg_id === window.Telegram.WebApp.initDataUnsafe.user.id && data[i].status !== 'verified') {
                 window.Telegram.WebApp.MainButton.setText('Verify yourself first');
-                tg.MainButton.disable();
+                window.Telegram.WebApp.MainButton.disable();
             }
         }
     })
