@@ -8,7 +8,7 @@ const cartFurtherButton = document.querySelector('.cart__further');
 
 Telegram.WebApp.ready()
 configureThemeColor(Telegram.WebApp.colorScheme);
-configureMainButton({text: 'view cart', color: '#008000', onclick: mainButtonClickListener});
+configureMainButton({text: 'view cart', color: '#31b545', onclick: mainButtonClickListener});
 Telegram.WebApp.MainButton.show();
 
 function CheckVerification(){
@@ -17,21 +17,13 @@ function CheckVerification(){
       return response.json();
     })
     .then((data) => {
-        fetch('https://upperrestaurant-default-rtdb.europe-west1.firebasedatabase.app/durgerking/reports/0.json', {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                tg_id: window.Telegram.WebApp.initDataUnsafe.user.id
-            })
-        });
 
         for (let i = 0; i < data.length; i++){
             if (data[i].tg_id === window.Telegram.WebApp.initDataUnsafe.user.id && data[i].status !== 'verified') {
                 window.Telegram.WebApp.MainButton.setText('Verify yourself first');
                 window.Telegram.WebApp.MainButton.disable();
+                window.Telegram.WebApp.MainButton.color = '#6e6e6e'
+                window.Telegram.WebApp.MainButton.textColor = '#ffffff'
             }
         }
     })
@@ -42,7 +34,7 @@ function mainButtonClickListener() {
     if (Telegram.WebApp.MainButton.text.toLowerCase() === 'view cart') {
         configureMainButton({text: 'close cart', color: '#FF0000', onclick: mainButtonClickListener});
     } else {
-        configureMainButton({text: 'view cart', color: '#008000', onclick: mainButtonClickListener});
+        configureMainButton({text: 'view cart', color: '#31b545', onclick: mainButtonClickListener});
     }
     cart.classList.toggle('active');
 }
