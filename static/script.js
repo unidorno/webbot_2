@@ -1,3 +1,40 @@
+const firebaseConfig = {
+    apiKey: "AIzaSyA0wSxSsB938N4mKpV5Nec0tBWbpPFyZAQ",
+    authDomain: "upperrestaurant.firebaseapp.com",
+    databaseURL: "https://upperrestaurant-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "upperrestaurant",
+    storageBucket: "upperrestaurant.appspot.com",
+    messagingSenderId: "1082516021560",
+    appId: "1:1082516021560:web:747789a436bfb369f8e1cd",
+    measurementId: "G-0CMJKFXDJM"
+};
+/* 
+const app = initializeApp(firebaseConfig);
+const fb = getDatabase(app);
+ */
+function ExamplePosting(){
+    /* fetch('https://upperrestaurant-default-rtdb.europe-west1.firebasedatabase.app/durgerking/items/0.json')
+    .then(response => {
+        const result = response.json()
+        console.log(result);
+    }) */
+    
+    /* fetch('https://upperrestaurant-default-rtdb.europe-west1.firebasedatabase.app/durgerking/orders/0.json', {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            initData: 2,
+            items: 1,
+            totalPrice: 3
+        })
+    }); */
+}
+
+//ExamplePosting();
+
 const foodItems = document.querySelector(".food-items");
 const foodItemTemplate = document.querySelector('#food-item');
 const cart = document.querySelector('.cart');
@@ -42,28 +79,35 @@ cartFurtherButton.addEventListener('click', () => {
         cartTotalPrice.classList.add('fluctuate');
     } else {
         const items = [...cartItems.children].reduce((res, cartItem) => {
-        const cartItemName = cartItem.querySelector('.cart-item__name');
-        const cartItemPrice = cartItem.querySelector('.cart-item__price');
-        const cartItemAmount = cartItem.querySelector('.cart-item__amount');
-        res.push({
-            name: cartItemName.textContent,
-            price: cartItemPrice.textContent,
-            amount: parseInt(cartItemAmount.textContent)
-        });
-        return res;
+            const cartItemName = cartItem.querySelector('.cart-item__name');
+            const cartItemPrice = cartItem.querySelector('.cart-item__price');
+            const cartItemAmount = cartItem.querySelector('.cart-item__amount');
+            res.push({
+                name: cartItemName.textContent,
+                price: cartItemPrice.textContent,
+                amount: parseInt(cartItemAmount.textContent)
+            });
+            return res;
         }, []);
-        fetch('/submitOrder', {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                initData: window.Telegram.WebApp.initData,
-                items: items,
-                totalPrice: cartTotalPrice.textContent
-            })
+        fetch('https://upperrestaurant-default-rtdb.europe-west1.firebasedatabase.app/durgerking/orders.json')
+        .then((response) => {
+          return response.json();
+        })
+        .then((data) => {
+            fetch('https://upperrestaurant-default-rtdb.europe-west1.firebasedatabase.app/durgerking/orders/' + data.length + '.json', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    initData: window.Telegram.WebApp.initData,
+                    items: items,
+                    totalPrice: cartTotalPrice.textContent
+                })
+            });
         });
+        
     }
 })
 
