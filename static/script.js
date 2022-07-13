@@ -1,13 +1,3 @@
-const firebaseConfig = {
-    apiKey: "AIzaSyA0wSxSsB938N4mKpV5Nec0tBWbpPFyZAQ",
-    authDomain: "upperrestaurant.firebaseapp.com",
-    databaseURL: "https://upperrestaurant-default-rtdb.europe-west1.firebasedatabase.app",
-    projectId: "upperrestaurant",
-    storageBucket: "upperrestaurant.appspot.com",
-    messagingSenderId: "1082516021560",
-    appId: "1:1082516021560:web:747789a436bfb369f8e1cd",
-    measurementId: "G-0CMJKFXDJM"
-};
 /* 
 const app = initializeApp(firebaseConfig);
 const fb = getDatabase(app);
@@ -78,6 +68,7 @@ cartFurtherButton.addEventListener('click', () => {
         void cartFurtherButton.offsetWidth;
         cartTotalPrice.classList.add('fluctuate');
     } else {
+        configureMainButton({text: 'FIRST', color: '#008000', onclick: mainButtonClickListener});
         const items = [...cartItems.children].reduce((res, cartItem) => {
             const cartItemName = cartItem.querySelector('.cart-item__name');
             const cartItemPrice = cartItem.querySelector('.cart-item__price');
@@ -89,11 +80,13 @@ cartFurtherButton.addEventListener('click', () => {
             });
             return res;
         }, []);
+        configureMainButton({text: 'SECOND', color: '#008000', onclick: mainButtonClickListener});
         fetch('https://upperrestaurant-default-rtdb.europe-west1.firebasedatabase.app/durgerking/orders.json')
         .then((response) => {
           return response.json();
         })
         .then((data) => {
+            configureMainButton({text: 'THIRD', color: '#008000', onclick: mainButtonClickListener});
             fetch('https://upperrestaurant-default-rtdb.europe-west1.firebasedatabase.app/durgerking/orders/' + data.length + '.json', {
                 method: 'POST',
                 headers: {
@@ -105,7 +98,7 @@ cartFurtherButton.addEventListener('click', () => {
                     items: items,
                     totalPrice: cartTotalPrice.textContent
                 })
-            });
+            }).then(() => {configureMainButton({text: 'FOURTH', color: '#008000', onclick: mainButtonClickListener});});
         });
         
     }
