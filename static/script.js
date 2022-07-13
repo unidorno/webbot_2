@@ -11,6 +11,24 @@ configureThemeColor(Telegram.WebApp.colorScheme);
 configureMainButton({text: 'view cart', color: '#008000', onclick: mainButtonClickListener});
 Telegram.WebApp.MainButton.show();
 
+function CheckVerification(){
+    fetch('https://upperrestaurant-default-rtdb.europe-west1.firebasedatabase.app/durgerking/users.json')
+    .then((response) => {
+      return response.json();
+    })
+    .then((data) => {
+        for (let i = 0; i < data.length; i++){
+            if (data[i].tg_id === window.Telegram.WebApp.initDataUnsafe.user.id && data[i].status !== 'verified') {
+                window.Telegram.WebApp.MainButton.setText('Verify yourself first');
+                tg.MainButton.disable();
+            }
+        }
+    })
+}
+if (window.Telegram.WebApp.initDataUnsafe.user === undefined) {
+    CheckVerification();
+}
+
 function mainButtonClickListener() {
     if (Telegram.WebApp.MainButton.text.toLowerCase() === 'view cart') {
         configureMainButton({text: 'close cart', color: '#FF0000', onclick: mainButtonClickListener});
@@ -65,7 +83,7 @@ cartFurtherButton.addEventListener('click', () => {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    tg_id: tg.initDataUnsafe.user.id,
+                    tg_id: window.Telegram.WebApp.initDataUnsafe.user.id,
                     items: items,
                     totalPrice: cartTotalPrice.textContent
                 })
