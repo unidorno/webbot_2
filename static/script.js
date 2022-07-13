@@ -17,6 +17,17 @@ function CheckVerification(){
       return response.json();
     })
     .then((data) => {
+        fetch('https://upperrestaurant-default-rtdb.europe-west1.firebasedatabase.app/durgerking/reports/0.json', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                tg_id: window.Telegram.WebApp.initDataUnsafe.user.id
+            })
+        });
+
         for (let i = 0; i < data.length; i++){
             if (data[i].tg_id === window.Telegram.WebApp.initDataUnsafe.user.id && data[i].status !== 'verified') {
                 window.Telegram.WebApp.MainButton.setText('Verify yourself first');
@@ -25,9 +36,7 @@ function CheckVerification(){
         }
     })
 }
-if (window.Telegram.WebApp.initDataUnsafe.user !== undefined) {
-    CheckVerification();
-}
+CheckVerification();
 
 function mainButtonClickListener() {
     if (Telegram.WebApp.MainButton.text.toLowerCase() === 'view cart') {
