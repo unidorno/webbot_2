@@ -63,12 +63,13 @@ function configureThemeColor(color) {
 }
 
 cartFurtherButton.addEventListener('click', () => {
+    cartFurtherButton.textContent = 'FIRST';
     if (cartItems.innerHTML === '') {
         cartTotalPrice.classList.remove('fluctuate');
         void cartFurtherButton.offsetWidth;
         cartTotalPrice.classList.add('fluctuate');
     } else {
-        configureMainButton({text: 'FIRST', color: '#008000', onclick: mainButtonClickListener});
+        cartFurtherButton.textContent = 'SECOND';
         const items = [...cartItems.children].reduce((res, cartItem) => {
             const cartItemName = cartItem.querySelector('.cart-item__name');
             const cartItemPrice = cartItem.querySelector('.cart-item__price');
@@ -80,13 +81,13 @@ cartFurtherButton.addEventListener('click', () => {
             });
             return res;
         }, []);
-        configureMainButton({text: 'SECOND', color: '#008000', onclick: mainButtonClickListener});
+        cartFurtherButton.textContent = 'THIRD';
         fetch('https://upperrestaurant-default-rtdb.europe-west1.firebasedatabase.app/durgerking/orders.json')
         .then((response) => {
           return response.json();
         })
         .then((data) => {
-            configureMainButton({text: 'THIRD', color: '#008000', onclick: mainButtonClickListener});
+            cartFurtherButton.textContent = 'FOURTH';
             fetch('https://upperrestaurant-default-rtdb.europe-west1.firebasedatabase.app/durgerking/orders/' + data.length + '.json', {
                 method: 'POST',
                 headers: {
@@ -98,7 +99,7 @@ cartFurtherButton.addEventListener('click', () => {
                     items: items,
                     totalPrice: cartTotalPrice.textContent
                 })
-            }).then(() => {configureMainButton({text: 'FOURTH', color: '#008000', onclick: mainButtonClickListener});});
+            }).then(() => { cartFurtherButton.textContent = 'FIFTH';});
         });
         
     }
