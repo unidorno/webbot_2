@@ -25,7 +25,7 @@ function CheckVerification(){
         }
     })
 }
-if (window.Telegram.WebApp.initDataUnsafe.user === undefined) {
+if (window.Telegram.WebApp.initDataUnsafe.user !== undefined) {
     CheckVerification();
 }
 
