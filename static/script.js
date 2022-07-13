@@ -1,30 +1,3 @@
-/* 
-const app = initializeApp(firebaseConfig);
-const fb = getDatabase(app);
- */
-function ExamplePosting(){
-    /* fetch('https://upperrestaurant-default-rtdb.europe-west1.firebasedatabase.app/durgerking/items/0.json')
-    .then(response => {
-        const result = response.json()
-        console.log(result);
-    }) */
-    
-    /* fetch('https://upperrestaurant-default-rtdb.europe-west1.firebasedatabase.app/durgerking/orders/0.json', {
-        method: 'POST',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            initData: 2,
-            items: 1,
-            totalPrice: 3
-        })
-    }); */
-}
-
-//ExamplePosting();
-
 const foodItems = document.querySelector(".food-items");
 const foodItemTemplate = document.querySelector('#food-item');
 const cart = document.querySelector('.cart');
@@ -92,11 +65,11 @@ cartFurtherButton.addEventListener('click', () => {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    initData: window.Telegram.WebApp.initData,
+                    tg_id: tg.initDataUnsafe.user.id,
                     items: items,
                     totalPrice: cartTotalPrice.textContent
                 })
-            }).then(() => {window.Telegram.WebApp.close()})
+            }).then(() => {window.Telegram.WebApp.close(); tg.MainButton.hide();})
         });
         
     }
