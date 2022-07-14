@@ -17,14 +17,17 @@ function CheckVerification(){
       return response.json();
     })
     .then((data) => {
-
+        let isapplied = false
         for (let i = 0; i < data.length; i++){
-            if (data[i].tg_id === window.Telegram.WebApp.initDataUnsafe.user.id && data[i].status !== 'verified') {
-                window.Telegram.WebApp.MainButton.setText('Verify yourself first');
-                window.Telegram.WebApp.MainButton.disable();
-                window.Telegram.WebApp.MainButton.color = '#6e6e6e'
-                window.Telegram.WebApp.MainButton.textColor = '#ffffff'
+            if (data[i].tg_id === window.Telegram.WebApp.initDataUnsafe.user.id && data[i].status === 'verified') {
+                isapplied = true
             }
+        }
+        if (!isapplied) {
+            window.Telegram.WebApp.MainButton.setText('Verify yourself first');
+            window.Telegram.WebApp.MainButton.disable();
+            window.Telegram.WebApp.MainButton.color = '#6e6e6e'
+            window.Telegram.WebApp.MainButton.textColor = '#ffffff'
         }
     })
 }
