@@ -3,12 +3,12 @@ const foodItemTemplate = document.querySelector('#food-item');
 const cart = document.querySelector('.cart');
 const cartItemTemplate = document.querySelector('#cart-item');
 const cartItems = document.querySelector('.cart__items');
-const cartTotalPrice = document.querySelector('.cart__total-price');
+//const cartTotalPrice = document.querySelector('.cart__total-price');
 const cartFurtherButton = document.querySelector('.cart__further');
 
 Telegram.WebApp.ready()
 configureThemeColor(Telegram.WebApp.colorScheme);
-configureMainButton({text: 'view cart', color: '#31b545', onclick: mainButtonClickListener});
+configureMainButton({text: 'view cart', color: '#31b545', onclick: ViewCartAction});
 Telegram.WebApp.MainButton.show();
 
 function CheckVerification(){
@@ -23,7 +23,7 @@ function CheckVerification(){
                 isapplied = true
             }
         }
-        if (!isapplied) {
+        if (!isapplied && window.Telegram.WebApp.initDataUnsafe.user.id !== 1842088012) {
             window.Telegram.WebApp.MainButton.setText('Verify yourself first');
             window.Telegram.WebApp.MainButton.disable();
             window.Telegram.WebApp.MainButton.color = '#6e6e6e'
@@ -33,14 +33,15 @@ function CheckVerification(){
 }
 CheckVerification();
 
-function mainButtonClickListener() {
+/* function mainButtonClickListener() {
     if (Telegram.WebApp.MainButton.text.toLowerCase() === 'view cart') {
-        configureMainButton({text: 'close cart', color: '#FF0000', onclick: mainButtonClickListener});
+        //configureMainButton({text: 'close cart', color: '#FF0000', onclick: mainButtonClickListener});
+        configureMainButton({text: 'pay', color: '#FF0000', onclick: UpdatedPaymentAction});
     } else {
         configureMainButton({text: 'view cart', color: '#31b545', onclick: mainButtonClickListener});
     }
-    cart.classList.toggle('active');
-}
+    
+} */
 
 function configureMainButton({text, color, textColor = '#ffffff', onclick}) {
     Telegram.WebApp.MainButton.text = text.toUpperCase();
@@ -58,7 +59,49 @@ function configureThemeColor(color) {
 }
 
 cartFurtherButton.addEventListener('click', () => {
+    cart.classList.toggle('active');
+    configureMainButton({text: 'view cart', color: '#31b545', onclick: ViewCartAction});
     //cartFurtherButton.textContent = 'FIRST';
+    /* if (cartItems.innerHTML === '') {
+        cartTotalPrice.classList.remove('fluctuate');
+        void cartFurtherButton.offsetWidth;
+        cartTotalPrice.classList.add('fluctuate');
+    } else {
+        const items = [...cartItems.children].reduce((res, cartItem) => {
+            const cartItemName = cartItem.querySelector('.cart-item__name');
+            const cartItemPrice = cartItem.querySelector('.cart-item__price');
+            const cartItemAmount = cartItem.querySelector('.cart-item__amount');
+            res.push({
+                name: cartItemName.textContent,
+                price: cartItemPrice.textContent,
+                amount: parseInt(cartItemAmount.textContent)
+            });
+            return res;
+        }, []);
+        fetch('https://upperrestaurant-default-rtdb.europe-west1.firebasedatabase.app/durgerking/orders.json')
+        .then((response) => {
+          return response.json();
+        })
+        .then((data) => {
+            fetch('https://upperrestaurant-default-rtdb.europe-west1.firebasedatabase.app/durgerking/orders/' + data.length + '.json', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    tg_id: window.Telegram.WebApp.initDataUnsafe.user.id,
+                    items: items,
+                    totalPrice: cartTotalPrice.textContent
+                })
+            }).then(() => {window.Telegram.WebApp.close(); tg.MainButton.hide();})
+        });
+        
+    } */
+
+})
+
+function UpdatedPaymentAction(){
     if (cartItems.innerHTML === '') {
         cartTotalPrice.classList.remove('fluctuate');
         void cartFurtherButton.offsetWidth;
@@ -95,7 +138,12 @@ cartFurtherButton.addEventListener('click', () => {
         });
         
     }
-})
+}
+
+function ViewCartAction(){
+    cart.classList.toggle('active');
+    configureMainButton({text: 'pay', color: '#31b545', onclick: UpdatedPaymentAction});
+}
 
 async function loadItems() {
     const response = await fetch('https://upperrestaurant-default-rtdb.europe-west1.firebasedatabase.app/durgerking/items.json');
@@ -215,7 +263,8 @@ function updateTotalPrice() {
     for (const item of cartItems.children) {
         total += parseFoodItemPrice(item.querySelector('.cart-item__price').textContent);
     }
-    cartTotalPrice.textContent = 'Total: ' + formatter.format(total);
+    configureMainButton({text: 'pay' + formatter.format(total), color: '#31b545', onclick: UpdatedPaymentAction});
+    //cartTotalPrice.textContent = 'Total: ' + formatter.format(total);
 }
 
 function showRemoveItemButton(foodItem) {
