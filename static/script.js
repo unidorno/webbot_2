@@ -5,11 +5,15 @@ const cartItemTemplate = document.querySelector('#cart-item');
 const cartItems = document.querySelector('.cart__items');
 const cartTotalPrice = document.querySelector('.cart__total-price');
 const cartFurtherButton = document.querySelector('.cart__further');
+let tg = window.Telegram.WebApp;
+/* const switch_dev = document.querySelector('.switchbutton'); */
+
+/* switch_dev.addEventListener('click', () => cart.classList.toggle('active'));*/
 
 Telegram.WebApp.ready()
 configureThemeColor(Telegram.WebApp.colorScheme);
-configureMainButton({text: 'view cart', color: '#31b545', onclick: mainButtonClickListener});
-Telegram.WebApp.MainButton.show();
+configureMainButton({text: 'view cart', color: '#31b545', onclick: Main_MainToSummary});
+tg.MainButton.hide();
 
 function CheckVerification(){
     fetch('https://upperrestaurant-default-rtdb.europe-west1.firebasedatabase.app/durgerking/users.json')
@@ -41,6 +45,48 @@ function mainButtonClickListener() {
         configureMainButton({text: 'view cart', color: '#31b545', onclick: mainButtonClickListener});
     }
     cart.classList.toggle('active');
+}
+
+function Main_MainToSummary(){
+    cart.classList.toggle('active');
+    configureMainButton({text: 'order', color: '#31b545', onclick: Main_Finish});
+}
+
+function Main_Finish(){
+    const items = [...cartItems.children].reduce((res, cartItem) => {
+        const cartItemName = cartItem.querySelector('.cart-item__name');
+        const cartItemPrice = cartItem.querySelector('.cart-item__price');
+        const cartItemAmount = cartItem.querySelector('.cart-item__amount');
+        res.push({
+            name: cartItemName.textContent,
+            price: cartItemPrice.textContent,
+            amount: parseInt(cartItemAmount.textContent)
+        });
+        return res;
+    }, []);
+    fetch('https://upperrestaurant-default-rtdb.europe-west1.firebasedatabase.app/durgerking/orders.json')
+    .then((response) => {
+      return response.json();
+    })
+    .then((data) => {
+        fetch('https://upperrestaurant-default-rtdb.europe-west1.firebasedatabase.app/durgerking/orders/' + data.length + '.json', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                tg_id: window.Telegram.WebApp.initDataUnsafe.user.id,
+                items: items,
+                totalPrice: cartTotalPrice.textContent
+            })
+        }).then(() => {window.Telegram.WebApp.close(); tg.MainButton.hide();})
+    });
+}
+
+function Edit_Button(){
+    cart.classList.toggle('active');
+    configureMainButton({text: 'view cart', color: '#31b545', onclick: Main_MainToSummary});
 }
 
 function configureMainButton({text, color, textColor = '#ffffff', onclick}) {
@@ -212,11 +258,11 @@ function getCartItem(foodItem, foodItemId) {
         sortCart();
 
         cartItem = cartItems.querySelector(`.cart-item[data-food-item-id="${foodItemId}"]`);
-        const cartItemAddButton = cartItem.querySelector('.cart-item__button[data-add]');
-        cartItemAddButton.addEventListener('click', () => cartItemAddListener(foodItem, cartItem));
+        //const cartItemAddButton = cartItem.querySelector('.cart-item__button[data-add]');
+        //cartItemAddButton.addEventListener('click', () => cartItemAddListener(foodItem, cartItem));
 
-        const cartItemRemoveButton = cartItem.querySelector('.cart-item__button[data-remove]');
-        cartItemRemoveButton.addEventListener('click', () => cartItemRemoveListener(foodItem, cartItem));
+        //const cartItemRemoveButton = cartItem.querySelector('.cart-item__button[data-remove]');
+        //cartItemRemoveButton.addEventListener('click', () => cartItemRemoveListener(foodItem, cartItem));
         return cartItem;
     }
 }
@@ -266,6 +312,8 @@ function updateTotalPrice() {
     }
     //configureMainButton({text: 'pay ' + formatter.format(total), color: '#31b545', onclick: UpdatedPaymentAction});
     cartTotalPrice.textContent = 'Total: ' + formatter.format(total);
+    if (total === 0) tg.MainButton.hide();
+    if (total > 0) tg.MainButton.show();
 }
 
 function showRemoveItemButton(foodItem) {
