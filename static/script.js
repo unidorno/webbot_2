@@ -13,7 +13,7 @@ let finish_order = false;
 
 Telegram.WebApp.ready()
 configureThemeColor(Telegram.WebApp.colorScheme);
-configureMainButton({text: 'view cart', color: '#31b545', onclick: Main_MainToSummary});
+configureMainButton({text: 'view cart', color: '#31b545', onclick: mainButtonClickListener});
 tg.MainButton.hide();
 
 function CheckVerification(){
@@ -40,12 +40,13 @@ CheckVerification();
 
 function mainButtonClickListener() {
     if (Telegram.WebApp.MainButton.text.toLowerCase() === 'view cart') {
-        configureMainButton({text: 'close cart', color: '#FF0000', onclick: mainButtonClickListener});
-        //configureMainButton({text: 'pay', color: '#FF0000', onclick: UpdatedPaymentAction});
-    } else {
-        configureMainButton({text: 'view cart', color: '#31b545', onclick: mainButtonClickListener});
+        //configureMainButton({text: 'close cart', color: '#FF0000', onclick: mainButtonClickListener});
+        configureMainButton({text: 'order', color: '#31b545', onclick: mainButtonClickListener});
+        cart.classList.toggle('active');
     }
-    cart.classList.toggle('active');
+    if (Telegram.WebApp.MainButton.text.toLowerCase() === 'order') {
+        configureMainButton({text: 'order', color: '#FF0000', onclick: Main_Finish});
+    }
 }
 
 function Main_MainToSummary(){
@@ -55,38 +56,35 @@ function Main_MainToSummary(){
 }
 
 function Main_Finish(){
-    if (finish_order){
-        const items = [...cartItems.children].reduce((res, cartItem) => {
-            const cartItemName = cartItem.querySelector('.cart-item__name');
-            const cartItemPrice = cartItem.querySelector('.cart-item__price');
-            const cartItemAmount = cartItem.querySelector('.cart-item__amount');
-            res.push({
-                name: cartItemName.textContent,
-                price: cartItemPrice.textContent,
-                amount: parseInt(cartItemAmount.textContent)
-            });
-            return res;
-        }, []);
-        fetch('https://upperrestaurant-default-rtdb.europe-west1.firebasedatabase.app/durgerking/orders.json')
-        .then((response) => {
-          return response.json();
-        })
-        .then((data) => {
-            fetch('https://upperrestaurant-default-rtdb.europe-west1.firebasedatabase.app/durgerking/orders/' + data.length + '.json', {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    tg_id: window.Telegram.WebApp.initDataUnsafe.user.id,
-                    items: items,
-                    totalPrice: cartTotalPrice.textContent
-                })
-            }).then(() => {window.Telegram.WebApp.close(); tg.MainButton.hide();})
+    const items = [...cartItems.children].reduce((res, cartItem) => {
+        const cartItemName = cartItem.querySelector('.cart-item__name');
+        const cartItemPrice = cartItem.querySelector('.cart-item__price');
+        const cartItemAmount = cartItem.querySelector('.cart-item__amount');
+        res.push({
+            name: cartItemName.textContent,
+            price: cartItemPrice.textContent,
+            amount: parseInt(cartItemAmount.textContent)
         });
-    }
-    if (!finish_order) finish_order = true;
+        return res;
+    }, []);
+    fetch('https://upperrestaurant-default-rtdb.europe-west1.firebasedatabase.app/durgerking/orders.json')
+    .then((response) => {
+      return response.json();
+    })
+    .then((data) => {
+        fetch('https://upperrestaurant-default-rtdb.europe-west1.firebasedatabase.app/durgerking/orders/' + data.length + '.json', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                tg_id: window.Telegram.WebApp.initDataUnsafe.user.id,
+                items: items,
+                totalPrice: cartTotalPrice.textContent
+            })
+        }).then(() => {window.Telegram.WebApp.close(); tg.MainButton.hide();})
+    });
 }
 
 function Edit_Button(){
