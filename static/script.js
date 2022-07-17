@@ -6,6 +6,7 @@ const cartItems = document.querySelector('.cart__items');
 const cartTotalPrice = document.querySelector('.cart__total-price');
 const cartFurtherButton = document.querySelector('.cart__further');
 let tg = window.Telegram.WebApp;
+let finish_order = false;
 /* const switch_dev = document.querySelector('.switchbutton'); */
 
 /* switch_dev.addEventListener('click', () => cart.classList.toggle('active'));*/
@@ -49,39 +50,43 @@ function mainButtonClickListener() {
 
 function Main_MainToSummary(){
     cart.classList.toggle('active');
+    finish_order = false;
     configureMainButton({text: 'order', color: '#31b545', onclick: Main_Finish});
 }
 
 function Main_Finish(){
-    const items = [...cartItems.children].reduce((res, cartItem) => {
-        const cartItemName = cartItem.querySelector('.cart-item__name');
-        const cartItemPrice = cartItem.querySelector('.cart-item__price');
-        const cartItemAmount = cartItem.querySelector('.cart-item__amount');
-        res.push({
-            name: cartItemName.textContent,
-            price: cartItemPrice.textContent,
-            amount: parseInt(cartItemAmount.textContent)
+    if (finish_order){
+        const items = [...cartItems.children].reduce((res, cartItem) => {
+            const cartItemName = cartItem.querySelector('.cart-item__name');
+            const cartItemPrice = cartItem.querySelector('.cart-item__price');
+            const cartItemAmount = cartItem.querySelector('.cart-item__amount');
+            res.push({
+                name: cartItemName.textContent,
+                price: cartItemPrice.textContent,
+                amount: parseInt(cartItemAmount.textContent)
+            });
+            return res;
+        }, []);
+        fetch('https://upperrestaurant-default-rtdb.europe-west1.firebasedatabase.app/durgerking/orders.json')
+        .then((response) => {
+          return response.json();
+        })
+        .then((data) => {
+            fetch('https://upperrestaurant-default-rtdb.europe-west1.firebasedatabase.app/durgerking/orders/' + data.length + '.json', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    tg_id: window.Telegram.WebApp.initDataUnsafe.user.id,
+                    items: items,
+                    totalPrice: cartTotalPrice.textContent
+                })
+            }).then(() => {window.Telegram.WebApp.close(); tg.MainButton.hide();})
         });
-        return res;
-    }, []);
-    fetch('https://upperrestaurant-default-rtdb.europe-west1.firebasedatabase.app/durgerking/orders.json')
-    .then((response) => {
-      return response.json();
-    })
-    .then((data) => {
-        fetch('https://upperrestaurant-default-rtdb.europe-west1.firebasedatabase.app/durgerking/orders/' + data.length + '.json', {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                tg_id: window.Telegram.WebApp.initDataUnsafe.user.id,
-                items: items,
-                totalPrice: cartTotalPrice.textContent
-            })
-        }).then(() => {window.Telegram.WebApp.close(); tg.MainButton.hide();})
-    });
+    }
+    if (!finish_order) finish_order = true;
 }
 
 function Edit_Button(){
