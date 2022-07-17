@@ -12,14 +12,15 @@
 </head>
 <body>
 <h1 class="title">NugPlug LA™</h1>
+<!-- <button class="switchbutton">Switch</button> -->
 <div class="food-items"></div>
 <div class="cart">
     <div class="cart-title-wrapper">
         <div class="title">Your order</div>
         <button class="cart__further">Pay</button>
     </div>
-    <div class="cart__total-price">$0.0</div>
     <div class="cart__items"></div>
+    <div class="cart__total-price">$0.0</div>
 </div>
 
 <template id="food-item">
@@ -27,6 +28,8 @@
         <img alt="food" class="food-item__icon">
         <div class="food-item__info">
             <div class="food-item__name"></div>
+        </div>
+        <div class="food-item__info">
             <div class="food-item__price"></div>
         </div>
         <div class="food-item__buttons">
