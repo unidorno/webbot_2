@@ -142,7 +142,8 @@ function UpdatedPaymentAction(){
 
 function ViewCartAction(){
     cart.classList.toggle('active');
-    configureMainButton({text: 'pay', color: '#31b545', onclick: UpdatedPaymentAction});
+    //configureMainButton({text: 'pay', color: '#31b545', onclick: UpdatedPaymentAction});
+    updateTotalPrice();
 }
 
 async function loadItems() {
@@ -181,7 +182,7 @@ function addItemListener(foodItem, foodItemId) {
 function cartItemAddListener(foodItem, cartItem) {
     incrementFoodItemCount(foodItem);
     updateItemsPrices(foodItem, cartItem);
-    updateTotalPrice();
+    //updateTotalPrice();
 }
 
 function removeItemListener(foodItem, foodItemId) {
@@ -198,7 +199,7 @@ function cartItemRemoveListener(foodItem, cartItem) {
         decrementFoodItemCount(foodItem, cartItem);
         updateItemsPrices(foodItem, cartItem);
     }
-    updateTotalPrice();
+    //updateTotalPrice();
 }
 
 function getCartItem(foodItem, foodItemId) {
@@ -263,7 +264,7 @@ function updateTotalPrice() {
     for (const item of cartItems.children) {
         total += parseFoodItemPrice(item.querySelector('.cart-item__price').textContent);
     }
-    configureMainButton({text: 'pay' + formatter.format(total), color: '#31b545', onclick: UpdatedPaymentAction});
+    configureMainButton({text: 'view cart ' + formatter.format(total), color: '#31b545', onclick: UpdatedPaymentAction});
     //cartTotalPrice.textContent = 'Total: ' + formatter.format(total);
 }
 
