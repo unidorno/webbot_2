@@ -141,7 +141,7 @@ function UpdatedPaymentAction(){
 }
 
 function ViewCartAction(){
-    cart.classList.toggle('active');
+    //cart.classList.toggle('active');
     //configureMainButton({text: 'pay', color: '#31b545', onclick: UpdatedPaymentAction});
     updateTotalPrice();
 }
@@ -264,7 +264,7 @@ function updateTotalPrice() {
     for (const item of cartItems.children) {
         total += parseFoodItemPrice(item.querySelector('.cart-item__price').textContent);
     }
-    configureMainButton({text: 'view cart ' + formatter.format(total), color: '#31b545', onclick: UpdatedPaymentAction});
+    configureMainButton({text: 'pay ' + formatter.format(total), color: '#31b545', onclick: UpdatedPaymentAction});
     //cartTotalPrice.textContent = 'Total: ' + formatter.format(total);
 }
 
