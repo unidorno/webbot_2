@@ -112,7 +112,8 @@ function configureThemeColor(color) {
 }
 
 cartFurtherButton.addEventListener('click', () => {
-    cart.classList.toggle('active');
+    Edit_Button();
+    /* cart.classList.toggle('active');
     //configureMainButton({text: 'view cart', color: '#31b545', onclick: ViewCartAction});
     //cartFurtherButton.textContent = 'FIRST';
     if (cartItems.innerHTML === '') {
@@ -150,7 +151,7 @@ cartFurtherButton.addEventListener('click', () => {
             }).then(() => {window.Telegram.WebApp.close(); tg.MainButton.hide();})
         });
         
-    }
+    } */
 
 })
 
