@@ -182,7 +182,7 @@ function addItemListener(foodItem, foodItemId) {
 function cartItemAddListener(foodItem, cartItem) {
     incrementFoodItemCount(foodItem);
     updateItemsPrices(foodItem, cartItem);
-    //updateTotalPrice();
+    updateTotalPrice();
 }
 
 function removeItemListener(foodItem, foodItemId) {
@@ -199,7 +199,7 @@ function cartItemRemoveListener(foodItem, cartItem) {
         decrementFoodItemCount(foodItem, cartItem);
         updateItemsPrices(foodItem, cartItem);
     }
-    //updateTotalPrice();
+    updateTotalPrice();
 }
 
 function getCartItem(foodItem, foodItemId) {
