@@ -126,16 +126,16 @@ button {
     font-weight: 700;
 }
 
-/* .cart__total-price {
+.cart__total-price {
     width: 85%;
     margin: 5px auto 0 auto;
     color: var(--sub-text-color);
     font-weight: 700;
-} */
+}
 
-/* .cart__total-price.fluctuate {
+.cart__total-price.fluctuate {
     animation: fluctuate .3s alternate 1 .3s;
-} */
+}
 
 .cart-title-wrapper {
     display: flex;
@@ -147,7 +147,7 @@ button {
 
 .cart__further {
     border: none;
-    background-color: #12a662;
+    background-color: #df3a3a;
     border-radius: 5px;
     padding: 6px 10px;
     color: white;
