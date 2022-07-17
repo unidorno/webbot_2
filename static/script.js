@@ -40,6 +40,7 @@ function mainButtonClickListener() {
     } else {
         configureMainButton({text: 'view cart', color: '#31b545', onclick: mainButtonClickListener});
     }
+    cart.classList.toggle('active');
 }
 
 function configureMainButton({text, color, textColor = '#ffffff', onclick}) {
