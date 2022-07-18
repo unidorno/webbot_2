@@ -15,7 +15,6 @@ Telegram.WebApp.ready()
 configureThemeColor(Telegram.WebApp.colorScheme);
 configureMainButton({text: 'view cart', color: '#31b545', onclick: Main_MainToSummary});
 tg.MainButton.hide();
-tg.expand();
 function CheckVerification(){
     fetch('https://upperrestaurant-default-rtdb.europe-west1.firebasedatabase.app/durgerking/users.json')
     .then((response) => {
