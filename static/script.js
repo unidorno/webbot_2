@@ -49,7 +49,6 @@ function mainButtonClickListener() {
 }
 
 function Main_MainToSummary(){
-    window.navigator.vibrate(80);
     cart.classList.toggle('active');
     finish_order = false;
     configureMainButton({text: 'order', color: '#31b545', onclick: Main_Finish});
@@ -59,13 +58,11 @@ function Main_Finish(){
     if (Telegram.WebApp.MainButton.text.toLowerCase() === 'order') {
         Telegram.WebApp.MainButton.offClick(Main_Finish);
         Telegram.WebApp.MainButton.onClick(PaymentProcess);
-        window.navigator.vibrate(50);
         //configureMainButton({text: 'order', color: '#31b545', onclick: PaymentProcess});
     }
 }
 
 function PaymentProcess(){
-    window.navigator.vibrate(30);
     const items = [...cartItems.children].reduce((res, cartItem) => {
         const cartItemName = cartItem.querySelector('.cart-item__name');
         const cartItemPrice = cartItem.querySelector('.cart-item__price');
@@ -98,11 +95,11 @@ function PaymentProcess(){
 }
 
 function Edit_Button(){
-    window.navigator.vibrate(30);
     cart.classList.toggle('active');
     Telegram.WebApp.MainButton.offClick(PaymentProcess);
     Telegram.WebApp.MainButton.onClick(Main_MainToSummary);
     configureMainButton({text: 'view cart', color: '#31b545', onclick: Main_MainToSummary});
+    navigator.vibrate(150);
 }
 
 function configureMainButton({text, color, textColor = '#ffffff', onclick}) {
@@ -323,7 +320,6 @@ function updateItemsPrices(foodItem, cartItem) {
     //cartItemPriceElement.textContent = formatter.format(foodItemPrice * foodItemCount);
     cartItemPriceElement.textContent = "$" + (foodItemPrice * foodItemCount);
     cartItemAmount.textContent = foodItem.dataset.count + 'x';
-    window.navigator.vibrate(100);
 }
 
 function updateTotalPrice() {
@@ -336,7 +332,6 @@ function updateTotalPrice() {
     cartTotalPrice.textContent = 'Total: $' + total;
     if (total === 0) tg.MainButton.hide();
     if (total > 0) tg.MainButton.show();
-    window.navigator.vibrate(200);
 }
 
 function showRemoveItemButton(foodItem) {
