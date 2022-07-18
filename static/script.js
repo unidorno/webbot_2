@@ -49,6 +49,7 @@ function mainButtonClickListener() {
 }
 
 function Main_MainToSummary(){
+    window.navigator.vibrate(80);
     cart.classList.toggle('active');
     finish_order = false;
     configureMainButton({text: 'order', color: '#31b545', onclick: Main_Finish});
@@ -58,11 +59,13 @@ function Main_Finish(){
     if (Telegram.WebApp.MainButton.text.toLowerCase() === 'order') {
         Telegram.WebApp.MainButton.offClick(Main_Finish);
         Telegram.WebApp.MainButton.onClick(PaymentProcess);
+        window.navigator.vibrate(50);
         //configureMainButton({text: 'order', color: '#31b545', onclick: PaymentProcess});
     }
 }
 
 function PaymentProcess(){
+    window.navigator.vibrate(30);
     const items = [...cartItems.children].reduce((res, cartItem) => {
         const cartItemName = cartItem.querySelector('.cart-item__name');
         const cartItemPrice = cartItem.querySelector('.cart-item__price');
@@ -95,6 +98,7 @@ function PaymentProcess(){
 }
 
 function Edit_Button(){
+    window.navigator.vibrate(30);
     cart.classList.toggle('active');
     Telegram.WebApp.MainButton.offClick(PaymentProcess);
     Telegram.WebApp.MainButton.onClick(Main_MainToSummary);
@@ -218,7 +222,8 @@ async function loadItems() {
         const {name, price, photo} = item;
         foodItemImg.src = photo;
         foodItemName.textContent = name;
-        foodItemPrice.textContent = formatter.format(price);
+        //foodItemPrice.textContent = formatter.format(price);
+        foodItemPrice.textContent = "$" + price;
         foodItem.querySelector('.food-item').dataset.id = index;
         foodItems.appendChild(foodItem);
 
@@ -302,7 +307,8 @@ function createCartItem(foodItem, foodItemId) {
 
     const foodItemPrice = foodItem.querySelector('.food-item__price');
     const cartItemPrice = cartItem.querySelector('.cart-item__price');
-    cartItemPrice.textContent = formatter.format(parseFoodItemPrice(foodItemPrice.textContent) * parseInt(foodItem.dataset.count));
+    //cartItemPrice.textContent = formatter.format(parseFoodItemPrice(foodItemPrice.textContent) * parseInt(foodItem.dataset.count));
+    cartItemPrice.textContent = "$" + (parseFoodItemPrice(foodItemPrice.textContent) * parseInt(foodItem.dataset.count));
 
     cartItem.querySelector('.cart-item').dataset.foodItemId = foodItemId.toString();
     return cartItem;
@@ -314,8 +320,10 @@ function updateItemsPrices(foodItem, cartItem) {
     const foodItemCount = parseInt(foodItem.dataset.count);
     const cartItemAmount = cartItem.querySelector('.cart-item__amount');
     const cartItemPriceElement = cartItem.querySelector('.cart-item__price');
-    cartItemPriceElement.textContent = formatter.format(foodItemPrice * foodItemCount);
+    //cartItemPriceElement.textContent = formatter.format(foodItemPrice * foodItemCount);
+    cartItemPriceElement.textContent = "$" + (foodItemPrice * foodItemCount);
     cartItemAmount.textContent = foodItem.dataset.count + 'x';
+    window.navigator.vibrate(100);
 }
 
 function updateTotalPrice() {
@@ -324,18 +332,24 @@ function updateTotalPrice() {
         total += parseFoodItemPrice(item.querySelector('.cart-item__price').textContent);
     }
     //configureMainButton({text: 'pay ' + formatter.format(total), color: '#31b545', onclick: UpdatedPaymentAction});
-    cartTotalPrice.textContent = 'Total: ' + formatter.format(total);
+    //cartTotalPrice.textContent = 'Total: ' + formatter.format(total);
+    cartTotalPrice.textContent = 'Total: $' + total;
     if (total === 0) tg.MainButton.hide();
     if (total > 0) tg.MainButton.show();
+    window.navigator.vibrate(200);
 }
 
 function showRemoveItemButton(foodItem) {
     const addItemButton = foodItem.querySelector(".food-item__button[data-add]");
     const removeItemButton = foodItem.querySelector(".food-item__button[data-remove]");
 
-    addItemButton.style.left = '60%';
+    /* addItemButton.style.left = '60%';
     addItemButton.textContent = '+';
-    removeItemButton.style.width = '40%';
+    removeItemButton.style.width = '40%'; */
+
+    addItemButton.style.left = '55%';
+    addItemButton.textContent = '+';
+    removeItemButton.style.width = '45%';
 }
 
 function hideRemoveItemButton(foodItem, cartItem) {
