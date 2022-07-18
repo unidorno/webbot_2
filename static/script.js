@@ -7,15 +7,15 @@ const cartTotalPrice = document.querySelector('.cart__total-price');
 const cartFurtherButton = document.querySelector('.cart__further');
 let tg = window.Telegram.WebApp;
 let finish_order = false;
-/* const switch_dev = document.querySelector('.switchbutton'); */
+const switch_dev = document.querySelector('.switchbutton');
 
-/* switch_dev.addEventListener('click', () => cart.classList.toggle('active'));*/
+switch_dev.addEventListener('click', () => cart.classList.toggle('active'));
 
 Telegram.WebApp.ready()
 configureThemeColor(Telegram.WebApp.colorScheme);
 configureMainButton({text: 'view cart', color: '#31b545', onclick: Main_MainToSummary});
 tg.MainButton.hide();
-
+tg.expand();
 function CheckVerification(){
     fetch('https://upperrestaurant-default-rtdb.europe-west1.firebasedatabase.app/durgerking/users.json')
     .then((response) => {
