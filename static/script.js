@@ -58,14 +58,13 @@ function Main_Finish(){
     if (Telegram.WebApp.MainButton.text.toLowerCase() === 'order') {
         Telegram.WebApp.MainButton.offClick(Main_Finish);
         Telegram.WebApp.MainButton.onClick(PaymentProcess);
-        Telegram.WebApp.MainButton.offClick(PaymentProcess);
-        Telegram.WebApp.MainButton.onClick(PaymentProcess);
         //configureMainButton({text: 'order', color: '#31b545', onclick: PaymentProcess});
     }
 }
 
 function PaymentProcess(){
     cart.classList.toggle('active');
+    Telegram.WebApp.MainButton.text = 'works'
     /* const items = [...cartItems.children].reduce((res, cartItem) => {
         const cartItemName = cartItem.querySelector('.cart-item__name');
         const cartItemPrice = cartItem.querySelector('.cart-item__price');
