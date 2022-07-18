@@ -20,17 +20,17 @@ button {
     -webkit-tap-highlight-color: transparent;
 }
 
-.title {
+/* .title {
     margin-top: 20px;
     text-align: center;
     font-size: 25px;
     color: var(--title-color);
-}
+} */
 
 .food-items {
     margin-top: 50px;
     display: grid;
-    grid-template-columns: repeat(auto-fit, 110px); /*HERE*/
+    grid-template-columns: repeat(auto-fit, 100px); /*HERE*/
     justify-items: center;
     justify-content: center;
     gap: 60px 10px;
