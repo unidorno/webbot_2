@@ -30,7 +30,7 @@ button {
 .food-items {
     margin-top: 50px;
     display: grid;
-    grid-template-columns: repeat(auto-fit, 120px);
+    grid-template-columns: repeat(auto-fit, 80px); /*HERE*/
     justify-items: center;
     justify-content: center;
     gap: 60px 10px;
@@ -48,16 +48,21 @@ button {
     margin: 0 auto;
 }
 
-.food-item__info {
+.food-item__name {
+    margin: 5px 0;
+    display: flex;
+    column-gap: 10px;
+    font-weight: 100;
+    color: var(--sub-text-color);
+}
+
+.food-item__price {
     margin: 5px 0;
     display: flex;
     column-gap: 10px;
     font-weight: 700;
     color: var(--sub-text-color);
-}
-
-.food-item__price {
-    text-decoration: underline;
+    /* text-decoration: underline; */
 }
 
 .food-item__buttons {
@@ -75,6 +80,7 @@ button {
     font-size: 15px;
     text-transform: uppercase;
     font-weight: 700;
+    /* width: 50px; */
 }
 
 .food-item__button[data-remove] {
