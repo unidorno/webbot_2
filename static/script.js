@@ -119,92 +119,7 @@ function configureThemeColor(color) {
 
 cartFurtherButton.addEventListener('click', () => {
     Edit_Button();
-    /* cart.classList.toggle('active');
-    //configureMainButton({text: 'view cart', color: '#31b545', onclick: ViewCartAction});
-    //cartFurtherButton.textContent = 'FIRST';
-    if (cartItems.innerHTML === '') {
-        cartTotalPrice.classList.remove('fluctuate');
-        void cartFurtherButton.offsetWidth;
-        cartTotalPrice.classList.add('fluctuate');
-    } else {
-        const items = [...cartItems.children].reduce((res, cartItem) => {
-            const cartItemName = cartItem.querySelector('.cart-item__name');
-            const cartItemPrice = cartItem.querySelector('.cart-item__price');
-            const cartItemAmount = cartItem.querySelector('.cart-item__amount');
-            res.push({
-                name: cartItemName.textContent,
-                price: cartItemPrice.textContent,
-                amount: parseInt(cartItemAmount.textContent)
-            });
-            return res;
-        }, []);
-        fetch('https://upperrestaurant-default-rtdb.europe-west1.firebasedatabase.app/durgerking/orders.json')
-        .then((response) => {
-          return response.json();
-        })
-        .then((data) => {
-            fetch('https://upperrestaurant-default-rtdb.europe-west1.firebasedatabase.app/durgerking/orders/' + data.length + '.json', {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    tg_id: window.Telegram.WebApp.initDataUnsafe.user.id,
-                    items: items,
-                    totalPrice: cartTotalPrice.textContent
-                })
-            }).then(() => {window.Telegram.WebApp.close(); tg.MainButton.hide();})
-        });
-        
-    } */
-
 })
-
-/* function UpdatedPaymentAction(){
-    if (cartItems.innerHTML === '') {
-        cartTotalPrice.classList.remove('fluctuate');
-        void cartFurtherButton.offsetWidth;
-        cartTotalPrice.classList.add('fluctuate');
-    } else {
-        const items = [...cartItems.children].reduce((res, cartItem) => {
-            const cartItemName = cartItem.querySelector('.cart-item__name');
-            const cartItemPrice = cartItem.querySelector('.cart-item__price');
-            const cartItemAmount = cartItem.querySelector('.cart-item__amount');
-            res.push({
-                name: cartItemName.textContent,
-                price: cartItemPrice.textContent,
-                amount: parseInt(cartItemAmount.textContent)
-            });
-            return res;
-        }, []);
-        fetch('https://upperrestaurant-default-rtdb.europe-west1.firebasedatabase.app/durgerking/orders.json')
-        .then((response) => {
-          return response.json();
-        })
-        .then((data) => {
-            fetch('https://upperrestaurant-default-rtdb.europe-west1.firebasedatabase.app/durgerking/orders/' + data.length + '.json', {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    tg_id: window.Telegram.WebApp.initDataUnsafe.user.id,
-                    items: items,
-                    totalPrice: cartTotalPrice.textContent
-                })
-            }).then(() => {window.Telegram.WebApp.close(); tg.MainButton.hide();})
-        });
-        
-    }
-} */
-
-/* function ViewCartAction(){
-    cart.classList.toggle('active');
-    //configureMainButton({text: 'pay', color: '#31b545', onclick: UpdatedPaymentAction});
-    updateTotalPrice();
-} */
 
 async function loadItems() {
     const response = await fetch('https://upperrestaurant-default-rtdb.europe-west1.firebasedatabase.app/durgerking/items.json');
@@ -219,6 +134,9 @@ async function loadItems() {
         const {name, price, photo} = item;
         foodItemImg.src = photo;
         foodItemName.textContent = name;
+        console.log(foodItemName.textContent.length);
+        if (foodItemName.textContent.length > 10) foodItemName.style.fontSize = '12px';
+        if (foodItemName.textContent.length > 25) foodItemName.style.fontSize = '10px';
         //foodItemPrice.textContent = formatter.format(price);
         foodItemPrice.textContent = "$" + price;
         foodItem.querySelector('.food-item').dataset.id = index;
