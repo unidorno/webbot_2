@@ -63,9 +63,7 @@ function Main_Finish(){
 }
 
 function PaymentProcess(){
-    cart.classList.toggle('active');
-    Telegram.WebApp.MainButton.text = 'works'
-    /* const items = [...cartItems.children].reduce((res, cartItem) => {
+    const items = [...cartItems.children].reduce((res, cartItem) => {
         const cartItemName = cartItem.querySelector('.cart-item__name');
         const cartItemPrice = cartItem.querySelector('.cart-item__price');
         const cartItemAmount = cartItem.querySelector('.cart-item__amount');
@@ -93,7 +91,7 @@ function PaymentProcess(){
                 totalPrice: cartTotalPrice.textContent
             })
         }).then(() => {window.Telegram.WebApp.close(); tg.MainButton.hide();})
-    }); */
+    });
 }
 
 function Edit_Button(){
