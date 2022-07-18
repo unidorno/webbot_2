@@ -50,18 +50,20 @@ button {
 
 .food-item__name {
     margin: 5px 0;
-    display: flex;
+    /* display: flex; */
     column-gap: 10px;
     font-weight: 100;
     color: var(--sub-text-color);
+    text-align: center;
 }
 
 .food-item__price {
     margin: 5px 0;
-    display: flex;
+    /* display: flex; */
     column-gap: 10px;
     font-weight: 700;
     color: var(--sub-text-color);
+    text-align: center;
     /* text-decoration: underline; */
 }
 
@@ -197,12 +199,16 @@ button {
 .cart-item__wrapper {
     display: flex;
     column-gap: 5px;
-    font-weight: 700;
     color: var(--sub-text-color);
+}
+
+.cart-item__name {
+    font-weight: 100;
 }
 
 .cart-item__amount {
     color: orange;
+    font-weight: 700;
 }
 
 .cart-item__buttons {
