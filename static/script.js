@@ -98,6 +98,8 @@ function PaymentProcess(){
 
 function Edit_Button(){
     cart.classList.toggle('active');
+    Telegram.WebApp.MainButton.offClick(PaymentProcess);
+    Telegram.WebApp.MainButton.onClick(Main_MainToSummary);
     configureMainButton({text: 'view cart', color: '#31b545', onclick: Main_MainToSummary});
 }
 
