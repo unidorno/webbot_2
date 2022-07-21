@@ -27,6 +27,30 @@ button {
     color: var(--title-color);
 } */
 
+/* .minprice_button {
+    margin-top: 50px;
+    margin-left: 160px;
+    border: none;
+    border-radius: 5px;
+    width: 472px;
+    height: 32px;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+} */
+
+.minprice_button {
+    border: none;
+    background-color: orange;
+    border-radius: 15px;
+    padding: 10px 20px;
+    color: white;
+    outline: none;
+    font-weight: 200;
+    margin-top: 17px;
+}
+
 .food-items {
     margin-top: 50px;
     display: grid;
@@ -126,6 +150,17 @@ button {
     transition: transform .3s;
 }
 
+.tips_section {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    transform: translateX(-100%);
+    background-color: var(--body-background-color);
+    transition: transform .3s;
+}
+
 .cart.active {
     transform: translateX(0);
 }
@@ -149,6 +184,13 @@ button {
 }
 
 .cart-title-wrapper {
+    display: flex;
+    justify-content: space-between;
+    width: 85%;
+    margin: 10px auto;
+}
+
+.tips_section-wrapper {
     display: flex;
     justify-content: space-between;
     width: 85%;
