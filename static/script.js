@@ -3,18 +3,30 @@ const foodItemTemplate = document.querySelector('#food-item');
 const cart = document.querySelector('.cart');
 const cartItemTemplate = document.querySelector('#cart-item');
 const cartItems = document.querySelector('.cart__items');
-const cartTotalPrice = document.querySelector('.cart__total-price');
+/* const cartTotalPrice = document.querySelector('.cart__total-price'); */
 const cartFurtherButton = document.querySelector('.cart__further');
+const minpriceButton = document.querySelector('.minprice_button');
 let tg = window.Telegram.WebApp;
 let finish_order = false;
+let min_price = 0;
+fetch('https://upperrestaurant-default-rtdb.europe-west1.firebasedatabase.app/durgerking/presets.json')
+.then((response) => {
+    return response.json();
+})
+.then((data) => {
+    min_price = data.min_price;
+    minpriceButton.textContent = '💰 To finish your order you need to have at least $' + min_price;
+})
 /* const switch_dev = document.querySelector('.switchbutton');
 
 switch_dev.addEventListener('click', () => cart.classList.toggle('active'));
  */
-Telegram.WebApp.ready()
+Telegram.WebApp.ready();
 configureThemeColor(Telegram.WebApp.colorScheme);
 configureMainButton({text: 'view cart', color: '#31b545', onclick: Main_MainToSummary});
 tg.MainButton.hide();
+tg.BackButton.onClick(Edit_Button);
+tg.BackButton.hide();
 tg.expand();
 function CheckVerification(){
     fetch('https://upperrestaurant-default-rtdb.europe-west1.firebasedatabase.app/durgerking/users.json')
@@ -52,13 +64,16 @@ function Main_MainToSummary(){
     cart.classList.toggle('active');
     finish_order = false;
     configureMainButton({text: 'order', color: '#31b545', onclick: Main_Finish});
+    tg.HapticFeedback.impactOccurred("heavy");
 }
 
 function Main_Finish(){
     if (Telegram.WebApp.MainButton.text.toLowerCase() === 'order') {
+        Telegram.WebApp.BackButton.show();
         Telegram.WebApp.MainButton.offClick(Main_Finish);
         Telegram.WebApp.MainButton.onClick(PaymentProcess);
         //configureMainButton({text: 'order', color: '#31b545', onclick: PaymentProcess});
+        tg.HapticFeedback.impactOccurred("medium");
     }
 }
 
@@ -79,6 +94,7 @@ function PaymentProcess(){
       return response.json();
     })
     .then((data) => {
+        tg.HapticFeedback.notificationOccurred("success");
         fetch('https://upperrestaurant-default-rtdb.europe-west1.firebasedatabase.app/durgerking/orders/' + data.length + '.json', {
             method: 'POST',
             headers: {
@@ -99,7 +115,8 @@ function Edit_Button(){
     Telegram.WebApp.MainButton.offClick(PaymentProcess);
     Telegram.WebApp.MainButton.onClick(Main_MainToSummary);
     configureMainButton({text: 'view cart', color: '#31b545', onclick: Main_MainToSummary});
-    navigator.vibrate(150);
+    tg.HapticFeedback.impactOccurred("medium");
+    Telegram.WebApp.BackButton.hide();
 }
 
 function configureMainButton({text, color, textColor = '#ffffff', onclick}) {
@@ -249,7 +266,16 @@ function updateTotalPrice() {
     //cartTotalPrice.textContent = 'Total: ' + formatter.format(total);
     cartTotalPrice.textContent = 'Total: $' + total;
     if (total === 0) tg.MainButton.hide();
-    if (total > 0) tg.MainButton.show();
+    if (total > 0) {
+        tg.MainButton.show();
+        let button_textt = Telegram.WebApp.MainButton.text.toLowerCase();
+        if (button_textt.includes('view cart')) Telegram.WebApp.MainButton.text = 'VIEW CART $' + total;
+        if (button_textt.includes('order')) Telegram.WebApp.MainButton.text = 'ORDER $' + total;
+        if (total < min_price) tg.MainButton.disable();
+        if (total >= min_price) tg.MainButton.enable();
+    }
+
+    tg.HapticFeedback.selectionChanged();
 }
 
 function showRemoveItemButton(foodItem) {
