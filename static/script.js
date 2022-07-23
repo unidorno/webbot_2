@@ -350,7 +350,7 @@ function updateTotalPrice() {
             if (total >= min_price) tg.MainButton.enable();
         }
         if (button_textt.includes('order')) {
-            if (location_info[window.Telegram.WebApp.initDataUnsafe.user.id] === null && location_info[window.Telegram.WebApp.initDataUnsafe.user.id] === undefined) {
+            if (location_info[window.Telegram.WebApp.initDataUnsafe.user.id] === null || location_info[window.Telegram.WebApp.initDataUnsafe.user.id] === undefined) {
                 Telegram.WebApp.MainButton.text = 'SHARE YOUR LOCATION';
                 Telegram.WebApp.MainButton.disable();
             }
