@@ -15,6 +15,18 @@ let min_price = 0;
 let delivery_fee = 0;
 let location_info = []
 
+const switch_dev = document.querySelector('.switchbutton');
+switch_dev.addEventListener('click', () => cart.classList.toggle('active'));
+Telegram.WebApp.ready();
+configureThemeColor(Telegram.WebApp.colorScheme);
+//tg.BackButton.onClick(Edit_Button);
+//tg.BackButton.hide();
+tg.expand();
+console.log(tg.version);
+
+configureMainButton({text: 'view cart', color: '#31b545', onclick: Main_MainToSummary});
+tg.MainButton.hide();
+
 function CheckVerification(){
     fetch('https://upperrestaurant-default-rtdb.europe-west1.firebasedatabase.app/durgerking/users.json')
     .then((response) => {
@@ -46,16 +58,6 @@ fetch('https://upperrestaurant-default-rtdb.europe-west1.firebasedatabase.app/du
     delivery_fee = data.delivery_fee;
 })
 
-const switch_dev = document.querySelector('.switchbutton');
-switch_dev.addEventListener('click', () => cart.classList.toggle('active'));
-Telegram.WebApp.ready();
-configureThemeColor(Telegram.WebApp.colorScheme);
-configureMainButton({text: 'view cart', color: '#31b545', onclick: Main_MainToSummary});
-tg.MainButton.hide();
-//tg.BackButton.onClick(Edit_Button);
-//tg.BackButton.hide();
-tg.expand();
-console.log(tg.version);
 fetch('https://upperrestaurant-default-rtdb.europe-west1.firebasedatabase.app/durgerking/open_hours.json')
 .then((response) => {
     return response.json();
@@ -334,10 +336,10 @@ function updateTotalPrice() {
     //configureMainButton({text: 'pay ' + formatter.format(total), color: '#31b545', onclick: UpdatedPaymentAction});
     //cartTotalPrice.textContent = 'Total: ' + formatter.format(total);
     cartDeliveryFee.textContent = '🚚 Delivery Fee: $' + delivery_fee;
+    let button_textt = Telegram.WebApp.MainButton.text.toLowerCase();
     if (total === 0) tg.MainButton.hide();
-    if (total > 0) {
+    if (total > 0 && !button_textt.includes('verify')) {
         tg.MainButton.show();
-        let button_textt = Telegram.WebApp.MainButton.text.toLowerCase();
         if (button_textt.includes('view cart')) {
             Telegram.WebApp.MainButton.text = 'VIEW CART $' + total;
             if (total < min_price) {
@@ -347,7 +349,7 @@ function updateTotalPrice() {
             if (total >= min_price) tg.MainButton.enable();
         }
         if (button_textt.includes('order')) {
-            if (location_info[window.Telegram.WebApp.initDataUnsafe.user.id] === null || location_info[window.Telegram.WebApp.initDataUnsafe.user.id] === undefined) {
+            if (location_info[window.Telegram.WebApp.initDataUnsafe.user.id] === null && location_info[window.Telegram.WebApp.initDataUnsafe.user.id] === undefined) {
                 Telegram.WebApp.MainButton.text = 'SHARE YOUR LOCATION';
                 Telegram.WebApp.MainButton.disable();
             }
