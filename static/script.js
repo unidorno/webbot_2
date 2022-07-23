@@ -93,11 +93,7 @@ fetch('https://upperrestaurant-default-rtdb.europe-west1.firebasedatabase.app/du
         if (day.length === 4) openhours.textContent = 'Open Hours: ' + day[3];
         if (day.length === 6) openhours.textContent = 'Open Hours: ' + day[5];
         
-        tg.MainButton.show();
-        Telegram.WebApp.MainButton.text = 'CLOSE';
-        Telegram.WebApp.MainButton.color = '#2f6ea5';
-        Telegram.WebApp.MainButton.textColor = '#ffffff';
-        Telegram.WebApp.MainButton.onClick(Telegram.WebApp.close());
+        tg.MainButton.hide();
     }
     console.log(data);
 })
