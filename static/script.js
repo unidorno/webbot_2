@@ -43,7 +43,6 @@ fetch('https://upperrestaurant-default-rtdb.europe-west1.firebasedatabase.app/du
 .then((data) => {
     min_price = data.min_price;
     delivery_fee = data.delivery_fee;
-    minpriceButton.textContent = '💰 To finish your order you need to have at least $' + min_price;
 })
 
 /* const switch_dev = document.querySelector('.switchbutton');
