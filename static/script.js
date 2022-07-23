@@ -81,20 +81,17 @@ fetch('https://upperrestaurant-default-rtdb.europe-west1.firebasedatabase.app/du
         data[6]
     ];
     let day = weekdays[time_now.getDay()];
-    console.log(now);
-    console.log(weekdays[0]);
-    if (now > (day[1] * timeOfffset) && now < (day[2] * timeOfffset) || now > (day[3] * timeOfffset) && now < (day[4] * timeOfffset)) {
+    if (now > day[1] && now < day[2] || now > day[3] && now < day[4]) {
         console.log("We're open right now!");
         CheckVerification();
     }
-     else {
+    else {
         shopclosed.classList.toggle('active');
         if (day.length === 4) openhours.textContent = 'Open Hours: ' + day[3];
         if (day.length === 6) openhours.textContent = 'Open Hours: ' + day[5];
         
         tg.MainButton.hide();
     }
-    console.log(data);
 })
 
 function mainButtonClickListener() {
@@ -220,7 +217,6 @@ async function loadItems() {
         const {name, price, photo} = item;
         foodItemImg.src = photo;
         foodItemName.textContent = name;
-        console.log(foodItemName.textContent.length);
         if (foodItemName.textContent.length > 10) foodItemName.style.fontSize = '12px';
         if (foodItemName.textContent.length > 25) foodItemName.style.fontSize = '10px';
         //foodItemPrice.textContent = formatter.format(price);
