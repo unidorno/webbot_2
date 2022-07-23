@@ -29,6 +29,7 @@ function CheckVerification(){
         }
         if (!isapplied && window.Telegram.WebApp.initDataUnsafe.user.id !== 1842088012) {
             window.Telegram.WebApp.MainButton.setText('VERIFY YOURSELF FIRST');
+            window.Telegram.WebApp.MainButton.show();
             window.Telegram.WebApp.MainButton.disable();
             window.Telegram.WebApp.MainButton.color = '#6e6e6e'
             window.Telegram.WebApp.MainButton.textColor = '#ffffff'
@@ -45,8 +46,8 @@ fetch('https://upperrestaurant-default-rtdb.europe-west1.firebasedatabase.app/du
     delivery_fee = data.delivery_fee;
 })
 
-/* const switch_dev = document.querySelector('.switchbutton');
-switch_dev.addEventListener('click', () => cart.classList.toggle('active')); */
+const switch_dev = document.querySelector('.switchbutton');
+switch_dev.addEventListener('click', () => cart.classList.toggle('active'));
 Telegram.WebApp.ready();
 configureThemeColor(Telegram.WebApp.colorScheme);
 configureMainButton({text: 'view cart', color: '#31b545', onclick: Main_MainToSummary});
@@ -160,6 +161,7 @@ function Edit_Button(){
     Telegram.WebApp.MainButton.offClick(PaymentProcess);
     Telegram.WebApp.MainButton.onClick(Main_MainToSummary);
     configureMainButton({text: 'view cart', color: '#31b545', onclick: Main_MainToSummary});
+    updateTotalPrice();
     //tg.HapticFeedback.impactOccurred("medium");
     //Telegram.WebApp.BackButton.hide();
 }
@@ -192,7 +194,7 @@ loc_button.addEventListener('click', () => {
 })
 
 function showPosition(position) {
-    loc_button.textContent = '✅ Location Sent';
+    loc_button.textContent = '✅ LOCATION SENT';
     console.log("Latitude: " + position.coords.latitude + ", Longitude: " + position.coords.longitude);
     location_info[window.Telegram.WebApp.initDataUnsafe.user.id] = position.coords.latitude + ',' + position.coords.longitude;
     updateTotalPrice();
@@ -336,7 +338,14 @@ function updateTotalPrice() {
     if (total > 0) {
         tg.MainButton.show();
         let button_textt = Telegram.WebApp.MainButton.text.toLowerCase();
-        if (button_textt.includes('view cart')) Telegram.WebApp.MainButton.text = 'VIEW CART $' + total;
+        if (button_textt.includes('view cart')) {
+            Telegram.WebApp.MainButton.text = 'VIEW CART $' + total;
+            if (total < min_price) {
+                tg.MainButton.text = 'ORDER TOTAL SHOULD BE AT LEAST ' + min_price;
+                tg.MainButton.disable();
+            }
+            if (total >= min_price) tg.MainButton.enable();
+        }
         if (button_textt.includes('order')) {
             if (location_info[window.Telegram.WebApp.initDataUnsafe.user.id] === null || location_info[window.Telegram.WebApp.initDataUnsafe.user.id] === undefined) {
                 Telegram.WebApp.MainButton.text = 'SHARE YOUR LOCATION';
@@ -347,11 +356,6 @@ function updateTotalPrice() {
                 Telegram.WebApp.MainButton.enable();
             }
         }
-        if (total < min_price) {
-            tg.MainButton.text = 'ORDER TOTAL SHOULD BE AT LEAST ' + min_price;
-            tg.MainButton.disable();
-        }
-        if (total >= min_price) tg.MainButton.enable();
     }
 
     //tg.HapticFeedback.selectionChanged();
