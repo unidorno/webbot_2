@@ -15,8 +15,8 @@ let min_price = 0;
 let delivery_fee = 0;
 let location_info = []
 
-const switch_dev = document.querySelector('.switchbutton');
-switch_dev.addEventListener('click', () => cart.classList.toggle('active'));
+/* const switch_dev = document.querySelector('.switchbutton');
+switch_dev.addEventListener('click', () => cart.classList.toggle('active')); */
 Telegram.WebApp.ready();
 configureThemeColor(Telegram.WebApp.colorScheme);
 //tg.BackButton.onClick(Edit_Button);
@@ -116,7 +116,7 @@ function Main_MainToSummary(){
 }
 
 function Main_Finish(){
-    if (Telegram.WebApp.MainButton.text.toLowerCase() === 'order') {
+    if ((Telegram.WebApp.MainButton.text.toLowerCase()).includes('order')) {
         //Telegram.WebApp.BackButton.show();
         Telegram.WebApp.MainButton.offClick(Main_Finish);
         Telegram.WebApp.MainButton.onClick(PaymentProcess);
@@ -143,6 +143,7 @@ function PaymentProcess(){
     })
     .then((data) => {
         //tg.HapticFeedback.notificationOccurred("success");
+        location_info[window.Telegram.WebApp.initDataUnsafe.user.id] = null;
         fetch('https://upperrestaurant-default-rtdb.europe-west1.firebasedatabase.app/durgerking/orders/' + data.length + '.json', {
             method: 'POST',
             headers: {
