@@ -14,9 +14,6 @@
 <!-- <button class="switchbutton">Switch</button> -->
 
 <!-- <h1 class="title">Web App Food store</h1> -->
-<div class="tips_section-wrapper">
-    <button class="minprice_button">To finish your order you need to have at least $10</button>
-</div>
 <div class="food-items"></div>
 <div class="cart">
     <div class="cart-title-wrapper">
@@ -24,7 +21,35 @@
         <button class="cart__further">Add more</button>
     </div>
     <div class="cart__items"></div>
-    <!-- <div class="cart__total-price">$0.0</div> -->
+    <div class="bottom__line_div">
+        <hr class="bottom__line"/>
+    </div>
+    <!-- <div class="cart-item">
+        <div class="cart-item__item">
+            <img alt="delivery" class="delivery-item__icon" src="https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/325/delivery-truck_1f69a.png">
+            <div class="cart-item__info">
+                <div class="cart-item__wrapper">
+                    <div class="cart__total-price">$0.0</div>
+                </div>
+            </div>
+        </div>
+    </div> -->
+    <!-- <img alt="delivery" class="delivery-item__icon" src="https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/325/delivery-truck_1f69a.png"> -->
+    <div class="cart__total-price">$0.0</div>
+    <div class="tips_section-wrapper">
+        <button class="loc_button">📍 Send Location</button>
+    </div>
+    <div class="tips_section-wrapper">
+        <label for="inlocation" class="label_customloc">Or Type It Here:</label>
+    </div>
+    <div class="tips_section-wrapper">
+        <input type="text" id="inlocation" class="custom_location" name="inlocation"><br>
+    </div>
+</div>
+<div class="shop-closed">
+    <img alt="closed" class="shopclosed__icon" src="https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/160/apple/325/shopping-bags_1f6cd-fe0f.png">
+    <div class="shopclosed_title">SHOP IS CLOSED 💤</div>
+    <div class="shopclosed_hours">Open Hours: 7AM - 10PM</div>
 </div>
 
 <template id="food-item">
@@ -50,8 +75,8 @@
             <img alt="food" class="cart-item__icon">
             <div class="cart-item__info">
                 <div class="cart-item__wrapper">
-                    <div class="cart-item__name"></div>
                     <div class="cart-item__amount"></div>
+                    <div class="cart-item__name"></div>
                 </div>
                 <!-- <div class="cart-item__buttons">
                     <button class="cart-item__button" data-remove>-</button>
