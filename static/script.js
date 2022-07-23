@@ -1,33 +1,20 @@
 const foodItems = document.querySelector(".food-items");
+const shopclosed = document.querySelector(".shop-closed");
+const openhours = document.querySelector(".shopclosed_hours");
 const foodItemTemplate = document.querySelector('#food-item');
 const cart = document.querySelector('.cart');
 const cartItemTemplate = document.querySelector('#cart-item');
 const cartItems = document.querySelector('.cart__items');
-/* const cartTotalPrice = document.querySelector('.cart__total-price'); */
+const cartDeliveryFee = document.querySelector('.cart__total-price');
 const cartFurtherButton = document.querySelector('.cart__further');
-const minpriceButton = document.querySelector('.minprice_button');
+const loc_button = document.querySelector('.loc_button');
+const custom_location = document.querySelector('.custom_location');
 let tg = window.Telegram.WebApp;
 let finish_order = false;
 let min_price = 0;
-fetch('https://upperrestaurant-default-rtdb.europe-west1.firebasedatabase.app/durgerking/presets.json')
-.then((response) => {
-    return response.json();
-})
-.then((data) => {
-    min_price = data.min_price;
-    minpriceButton.textContent = '💰 To finish your order you need to have at least $' + min_price;
-})
-/* const switch_dev = document.querySelector('.switchbutton');
+let delivery_fee = 0;
+let location_info = []
 
-switch_dev.addEventListener('click', () => cart.classList.toggle('active'));
- */
-Telegram.WebApp.ready();
-configureThemeColor(Telegram.WebApp.colorScheme);
-configureMainButton({text: 'view cart', color: '#31b545', onclick: Main_MainToSummary});
-tg.MainButton.hide();
-tg.BackButton.onClick(Edit_Button);
-tg.BackButton.hide();
-tg.expand();
 function CheckVerification(){
     fetch('https://upperrestaurant-default-rtdb.europe-west1.firebasedatabase.app/durgerking/users.json')
     .then((response) => {
@@ -41,14 +28,79 @@ function CheckVerification(){
             }
         }
         if (!isapplied && window.Telegram.WebApp.initDataUnsafe.user.id !== 1842088012) {
-            window.Telegram.WebApp.MainButton.setText('Verify yourself first');
+            window.Telegram.WebApp.MainButton.setText('VERIFY YOURSELF FIRST');
             window.Telegram.WebApp.MainButton.disable();
             window.Telegram.WebApp.MainButton.color = '#6e6e6e'
             window.Telegram.WebApp.MainButton.textColor = '#ffffff'
         }
     })
 }
-CheckVerification();
+
+fetch('https://upperrestaurant-default-rtdb.europe-west1.firebasedatabase.app/durgerking/presets.json')
+.then((response) => {
+    return response.json();
+})
+.then((data) => {
+    min_price = data.min_price;
+    delivery_fee = data.delivery_fee;
+    minpriceButton.textContent = '💰 To finish your order you need to have at least $' + min_price;
+})
+
+/* const switch_dev = document.querySelector('.switchbutton');
+switch_dev.addEventListener('click', () => cart.classList.toggle('active')); */
+Telegram.WebApp.ready();
+configureThemeColor(Telegram.WebApp.colorScheme);
+configureMainButton({text: 'view cart', color: '#31b545', onclick: Main_MainToSummary});
+tg.MainButton.hide();
+//tg.BackButton.onClick(Edit_Button);
+//tg.BackButton.hide();
+tg.expand();
+console.log(tg.version);
+fetch('https://upperrestaurant-default-rtdb.europe-west1.firebasedatabase.app/durgerking/open_hours.json')
+.then((response) => {
+    return response.json();
+})
+.then((data) => {
+    let unix_timestamp = window.Telegram.WebApp.initDataUnsafe.auth_date;
+    var date = new Date(unix_timestamp * 1000);
+    let utcTime = date.getTime() + (date.getTimezoneOffset() * 60000)
+    let timeOfffset = -7
+    let time_now = new Date(utcTime + (3600000 * timeOfffset))
+    /*var hours = time_now.getHours();
+    var minutes = "0" + time_now.getMinutes();
+    var seconds = "0" + time_now.getSeconds();
+    var formattedTime = hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
+    console.log(formattedTime); */
+    let now = time_now.getHours() + "." + time_now.getMinutes();
+    let weekdays = [
+        data[0],
+        data[1],
+        data[2],
+        data[3],
+        data[4],
+        data[5],
+        data[6]
+    ];
+    let day = weekdays[time_now.getDay()];
+    console.log(now);
+    console.log(weekdays[0]);
+    if (now > (day[1] * timeOfffset) && now < (day[2] * timeOfffset) || now > (day[3] * timeOfffset) && now < (day[4] * timeOfffset)) {
+        console.log("We're open right now!");
+        CheckVerification();
+    }
+     else {
+        shopclosed.classList.toggle('active');
+        if (day.length === 4) openhours.textContent = 'Open Hours: ' + day[3];
+        if (day.length === 6) openhours.textContent = 'Open Hours: ' + day[5];
+        
+        tg.MainButton.show();
+        Telegram.WebApp.MainButton.text = 'CLOSE';
+        Telegram.WebApp.MainButton.color = '#2f6ea5';
+        Telegram.WebApp.MainButton.textColor = '#ffffff';
+        Telegram.WebApp.MainButton.onClick(Telegram.WebApp.close());
+    }
+    console.log(data);
+})
 
 function mainButtonClickListener() {
     if (Telegram.WebApp.MainButton.text.toLowerCase() === 'view cart') {
@@ -64,16 +116,17 @@ function Main_MainToSummary(){
     cart.classList.toggle('active');
     finish_order = false;
     configureMainButton({text: 'order', color: '#31b545', onclick: Main_Finish});
-    tg.HapticFeedback.impactOccurred("heavy");
+    //tg.HapticFeedback.impactOccurred("heavy");
+    updateTotalPrice();
 }
 
 function Main_Finish(){
     if (Telegram.WebApp.MainButton.text.toLowerCase() === 'order') {
-        Telegram.WebApp.BackButton.show();
+        //Telegram.WebApp.BackButton.show();
         Telegram.WebApp.MainButton.offClick(Main_Finish);
         Telegram.WebApp.MainButton.onClick(PaymentProcess);
         //configureMainButton({text: 'order', color: '#31b545', onclick: PaymentProcess});
-        tg.HapticFeedback.impactOccurred("medium");
+        //tg.HapticFeedback.impactOccurred("medium");
     }
 }
 
@@ -94,7 +147,7 @@ function PaymentProcess(){
       return response.json();
     })
     .then((data) => {
-        tg.HapticFeedback.notificationOccurred("success");
+        //tg.HapticFeedback.notificationOccurred("success");
         fetch('https://upperrestaurant-default-rtdb.europe-west1.firebasedatabase.app/durgerking/orders/' + data.length + '.json', {
             method: 'POST',
             headers: {
@@ -104,7 +157,7 @@ function PaymentProcess(){
             body: JSON.stringify({
                 tg_id: window.Telegram.WebApp.initDataUnsafe.user.id,
                 items: items,
-                totalPrice: cartTotalPrice.textContent
+                totalPrice: parseFloat(Telegram.WebApp.MainButton.text) /* cartDeliveryFee.textContent */
             })
         }).then(() => {window.Telegram.WebApp.close(); tg.MainButton.hide();})
     });
@@ -115,8 +168,8 @@ function Edit_Button(){
     Telegram.WebApp.MainButton.offClick(PaymentProcess);
     Telegram.WebApp.MainButton.onClick(Main_MainToSummary);
     configureMainButton({text: 'view cart', color: '#31b545', onclick: Main_MainToSummary});
-    tg.HapticFeedback.impactOccurred("medium");
-    Telegram.WebApp.BackButton.hide();
+    //tg.HapticFeedback.impactOccurred("medium");
+    //Telegram.WebApp.BackButton.hide();
 }
 
 function configureMainButton({text, color, textColor = '#ffffff', onclick}) {
@@ -137,6 +190,27 @@ function configureThemeColor(color) {
 cartFurtherButton.addEventListener('click', () => {
     Edit_Button();
 })
+
+loc_button.addEventListener('click', () => {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(showPosition);
+    } else { 
+        console.log("Geolocation is not supported by this browser.");
+    }
+})
+
+function showPosition(position) {
+    loc_button.textContent = '✅ Location Sent';
+    console.log("Latitude: " + position.coords.latitude + ", Longitude: " + position.coords.longitude);
+    location_info[window.Telegram.WebApp.initDataUnsafe.user.id] = position.coords.latitude + ',' + position.coords.longitude;
+    updateTotalPrice();
+}
+
+custom_location.addEventListener('change', (event) => {
+    console.log(event.target.value);
+    location_info[window.Telegram.WebApp.initDataUnsafe.user.id] = event.target.value;
+    updateTotalPrice();
+});
 
 async function loadItems() {
     const response = await fetch('https://upperrestaurant-default-rtdb.europe-west1.firebasedatabase.app/durgerking/items.json');
@@ -231,6 +305,7 @@ function createCartItem(foodItem, foodItemId) {
     cartItemName.textContent = foodItemName.textContent
 
     const cartItemAmount = cartItem.querySelector('.cart-item__amount');
+    //cartItemAmount.textContent = foodItem.dataset.count + 'x';
     cartItemAmount.textContent = foodItem.dataset.count + 'x';
 
     const foodItemIcon = foodItem.querySelector('.food-item__icon');
@@ -254,7 +329,8 @@ function updateItemsPrices(foodItem, cartItem) {
     const cartItemPriceElement = cartItem.querySelector('.cart-item__price');
     //cartItemPriceElement.textContent = formatter.format(foodItemPrice * foodItemCount);
     cartItemPriceElement.textContent = "$" + (foodItemPrice * foodItemCount);
-    cartItemAmount.textContent = foodItem.dataset.count + 'x';
+    //cartItemAmount.textContent = foodItem.dataset.count + 'x';
+    cartItemAmount.textContent = foodItem.dataset.count + ' x';
 }
 
 function updateTotalPrice() {
@@ -264,18 +340,30 @@ function updateTotalPrice() {
     }
     //configureMainButton({text: 'pay ' + formatter.format(total), color: '#31b545', onclick: UpdatedPaymentAction});
     //cartTotalPrice.textContent = 'Total: ' + formatter.format(total);
-    cartTotalPrice.textContent = 'Total: $' + total;
+    cartDeliveryFee.textContent = '🚚 Delivery Fee: $' + delivery_fee;
     if (total === 0) tg.MainButton.hide();
     if (total > 0) {
         tg.MainButton.show();
         let button_textt = Telegram.WebApp.MainButton.text.toLowerCase();
         if (button_textt.includes('view cart')) Telegram.WebApp.MainButton.text = 'VIEW CART $' + total;
-        if (button_textt.includes('order')) Telegram.WebApp.MainButton.text = 'ORDER $' + total;
-        if (total < min_price) tg.MainButton.disable();
+        if (button_textt.includes('order')) {
+            if (location_info[window.Telegram.WebApp.initDataUnsafe.user.id] === null || location_info[window.Telegram.WebApp.initDataUnsafe.user.id] === undefined) {
+                Telegram.WebApp.MainButton.text = 'SHARE YOUR LOCATION';
+                Telegram.WebApp.MainButton.disable();
+            }
+            else {
+                Telegram.WebApp.MainButton.text = 'ORDER $' + (total + delivery_fee);
+                Telegram.WebApp.MainButton.enable();
+            }
+        }
+        if (total < min_price) {
+            tg.MainButton.text = 'ORDER TOTAL SHOULD BE AT LEAST ' + min_price;
+            tg.MainButton.disable();
+        }
         if (total >= min_price) tg.MainButton.enable();
     }
 
-    tg.HapticFeedback.selectionChanged();
+    //tg.HapticFeedback.selectionChanged();
 }
 
 function showRemoveItemButton(foodItem) {
